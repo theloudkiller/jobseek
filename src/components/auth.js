@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   getRedirectResult,
   signInWithPopup,
+  signInWithRedirect,
   signOut,
 } from "firebase/auth";
 import { useState, useEffect } from "react";
@@ -47,13 +48,9 @@ const Auth = () => {
 
   const signInWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithRedirect(auth, googleProvider);
     } catch (err) {
-      // Handle the error (if any) when using pop-up
-      console.error(err.message);
-
-      // If an error occurs, fallback to redirect-based sign-in
-      auth.signInWithRedirect(googleProvider);
+      console.error("Error initiating Google sign-in redirect:", err.message);
     }
   };
 
@@ -67,11 +64,16 @@ const Auth = () => {
 
   const handleRedirectSignIn = async () => {
     try {
-      await getRedirectResult(auth);
+      const result = await getRedirectResult(auth);
+      // You can handle user data or other logic after successful sign-in
+      if (result.user) {
+        console.log(result.user);
+      }
     } catch (err) {
-      console.error(err.message);
+      console.error("Error handling redirect sign-in:", err.message);
     }
   };
+  
 
   useEffect(() => {
     handleRedirectSignIn();
