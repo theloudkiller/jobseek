@@ -2,10 +2,11 @@
 import { auth, googleProvider } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
+  getRedirectResult,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const AuthContainer = styled.div`
@@ -20,12 +21,6 @@ const AuthContainer = styled.div`
 const AuthHeader = styled.h2`
   text-align: center;
   margin-bottom: 20px;
-`;
-
-const AuthInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
 `;
 
 const AuthButton = styled.button`
@@ -54,7 +49,11 @@ const Auth = () => {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (err) {
+      // Handle the error (if any) when using pop-up
       console.error(err.message);
+
+      // If an error occurs, fallback to redirect-based sign-in
+      auth.signInWithRedirect(googleProvider);
     }
   };
 
@@ -66,12 +65,23 @@ const Auth = () => {
     }
   };
 
+  const handleRedirectSignIn = async () => {
+    try {
+      await getRedirectResult(auth);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    handleRedirectSignIn();
+  }, []);
+
   return (
     <AuthContainer>
       {auth.currentUser ? null : (
         <div>
           <AuthHeader>Login Page</AuthHeader>
-          
           <AuthButton onClick={signInWithGoogle}>Sign In With Google</AuthButton>
         </div>
       )}

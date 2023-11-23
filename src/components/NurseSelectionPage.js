@@ -29,7 +29,7 @@ const NurseSelectionPage = ({ onSelectNurse }) => {
     setSelectedNurse(nurse);
     onSelectNurse(nurse);
   };
-  
+   
   return (
     <div>
       <h2>Select your Profession</h2>
