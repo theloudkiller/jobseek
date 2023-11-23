@@ -1,49 +1,50 @@
 // MainContent.js
-import React, { useEffect, useState } from "react";
-import { db } from "../config/firebase";
-import { getDocs, collection } from "firebase/firestore";
+import React, { useState } from 'react';
+import NurseSelectionPage from './NurseSelectionPage';
+import CountrySelectionPage from './CountrySelectionPage';
+import JobsPage from './JobsPage';
+import ApplicationPage from './ApplicationPage';
+
+import './MainContent.css'; // Import your CSS file for styling
 
 const MainContent = () => {
-  const [movieList, setMovieList] = useState([]);
+  const [selectedNurse, setSelectedNurse] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedJob, setSelectedJob] = useState(null);
 
-  const moviesCollectionRef = collection(db, "movies");
+  const handleNurseSelect = (nurse) => {
+    setSelectedNurse(nurse);
+    setSelectedCountry(null);
+    setSelectedJob(null);
+  };
 
-  useEffect(() => {
-    const getMovieList = async () => {
-      try {
-        const data = await getDocs(moviesCollectionRef);
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setMovieList(filteredData);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setSelectedJob(null);
+  };
 
-    getMovieList();
-  }, [moviesCollectionRef]);
-
-  // You can add more functionality or UI elements related to movie data here
+  const handleJobSelect = (job) => {
+    setSelectedJob(job);
+  };
 
   return (
-    <div>
-      <h2>Main Content</h2>
-      <p>Welcome to the main content section. Here are the movies:</p>
-      <div>
-        {movieList.map((movie) => (
-          <div key={movie.id}>
-            <h3 style={{ color: movie.receivedAnOscar ? "green" : "red" }}>
-              {movie.title}
-            </h3>
-            <p>Date: {movie.releaseDate}</p>
-            {/* Add more movie details as needed */}
-
-            {/* You can add buttons or other UI elements for actions */}
-          </div>
-        ))}
+    <div className="main-content">
+      <div className="selectors">
+        <NurseSelectionPage onSelectNurse={handleNurseSelect} />
+        <CountrySelectionPage
+          selectedNurse={selectedNurse}
+          onSelectCountry={handleCountrySelect}
+        />
+        <JobsPage selectedCountry={selectedCountry} onSelectJob={handleJobSelect} />
       </div>
+
+      {selectedJob && (
+        <ApplicationPage
+          selectedCountry={selectedCountry}
+          selectedJob={selectedJob}
+          onSelectApplication={() => setSelectedJob(null)}
+        />
+      )}
     </div>
   );
 };

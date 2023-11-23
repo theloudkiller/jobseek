@@ -1,4 +1,4 @@
-
+// firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -10,14 +10,24 @@ const firebaseConfig = {
   projectId: "web-app-af6cb",
   storageBucket: "web-app-af6cb.appspot.com",
   messagingSenderId: "761982556411",
-  appId: "1:761982556411:web:f74777220c626c8686b85e",
-  measurementId: "G-YH6L7G222D"
+  appId: "1:761982556411:web:6e9bbc0a3767d6c286b85e",
+  measurementId: "G-ZXF08H1WKC"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const googleProvider = new GoogleAuthProvider();
 
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+const signInWithGoogle = async () => {
+  try {
+    const result = await auth.signInWithPopup(googleProvider);
+    // You can handle user data or other logic after successful sign-in
+    console.log(result.user);
+  } catch (error) {
+    console.error("Error signing in with Google:", error);
+  }
+};
+
+export { auth, db, storage, signInWithGoogle, googleProvider }; // Add 'googleProvider' to the export statement
