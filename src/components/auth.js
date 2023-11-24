@@ -51,7 +51,7 @@ const Auth = () => {
 
   const signInWithGoogle = async () => {
     try {
-      await signInWithRedirect(auth, googleProvider);
+      await signInWithPopup(auth, googleProvider);
     } catch (err) {
       // Handle the error (if any) when using pop-up
       console.error(err.message);
