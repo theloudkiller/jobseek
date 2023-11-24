@@ -1,8 +1,12 @@
 // App.js
 import React, { useEffect, useState } from "react";
 import Auth from "./components/auth";
+
+import {useAuthState} from 'react-firebase-hooks/auth'; 
+
 import MainContent from "./components/MainContent";
 import { auth } from "./config/firebase";
+import { GoogleLogin } from '@react-oauth/google';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -19,7 +23,8 @@ function App() {
 
   return (
     <div className="App">
-      {user ? <MainContent /> : <Auth />}
+      <Auth />
+      {user && <MainContent />}
     </div>
   );
 }

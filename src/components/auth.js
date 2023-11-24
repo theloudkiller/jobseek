@@ -1,14 +1,17 @@
 // Auth.js
-import { auth, googleProvider } from "../config/firebase";
+import { auth, googleProvider  } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
   getRedirectResult,
-  signInWithPopup,
   signInWithRedirect,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { GoogleLogin } from '@react-oauth/google';
+import firebase from '../config/firebase';
+
 
 const AuthContainer = styled.div`
   max-width: 400px;
@@ -50,9 +53,12 @@ const Auth = () => {
     try {
       await signInWithRedirect(auth, googleProvider);
     } catch (err) {
-      console.error("Error initiating Google sign-in redirect:", err.message);
+      // Handle the error (if any) when using pop-up
+      console.error(err.message);
+
     }
   };
+  
 
   const logout = async () => {
     try {
@@ -64,16 +70,11 @@ const Auth = () => {
 
   const handleRedirectSignIn = async () => {
     try {
-      const result = await getRedirectResult(auth);
-      // You can handle user data or other logic after successful sign-in
-      if (result.user) {
-        console.log(result.user);
-      }
+      await getRedirectResult(auth);
     } catch (err) {
-      console.error("Error handling redirect sign-in:", err.message);
+      console.error(err.message);
     }
   };
-  
 
   useEffect(() => {
     handleRedirectSignIn();

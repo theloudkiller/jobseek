@@ -1,11 +1,14 @@
 // firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider,signInWithRedirect } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import firebase from "firebase/app";
+
+
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAMawOYV_6HtosTYp0RnjNUFb7idBXdwxY",
+ apiKey: "AIzaSyAMawOYV_6HtosTYp0RnjNUFb7idBXdwxY",
   authDomain: "web-app-af6cb.firebaseapp.com",
   projectId: "web-app-af6cb",
   storageBucket: "web-app-af6cb.appspot.com",
@@ -15,19 +18,25 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+
 const db = getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
+
+
+
 const signInWithGoogle = async () => {
   try {
-    const result = await auth.signInWithPopup(googleProvider);
-    // You can handle user data or other logic after successful sign-in
-    console.log(result.user);
+    // Start the Google sign-in redirect
+    await signInWithRedirect(auth, googleProvider);
   } catch (error) {
-    console.error("Error signing in with Google:", error);
+    console.error("Error starting Google sign-in redirect:", error);
   }
 };
 
-export { auth, db, storage, signInWithGoogle, googleProvider }; // Add 'googleProvider' to the export statement
+
+const auth = getAuth();
+
+
+export { auth, db, storage, signInWithGoogle,signInWithRedirect, googleProvider }; // Add 'googleProvider' to the export statement
